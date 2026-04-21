@@ -1,0 +1,156 @@
+{
+  "model_name": "pilot_rimes",
+  "image": "input_samples\\rimes.png",
+  "task": "ocr_with_boxes",
+  "prompt": "<ocr_with_boxes>",
+  "prediction_time": 3.2908215522766113,
+  "raw_prediction": "<x_6><y_4> NOVAIS Stépanie<x_34><y_8><sep/><x_5><y_10> 16 RUE DE LA VALLEE<x_39><y_14><sep/><x_5><y_16> 57800 ROSBRUCK<x_34><y_19><sep/><x_6><y_19> tel : 03770072994<x_29><y_23><sep/><x_63><y_28> Les 3 Suifs<x_82><y_33><sep/><x_63><y_33> 40250 LAUREDE<x_89><y_37><sep/><x_6><y_37> Objet : Modification de commande<x_60><y_42><sep/><x_5><y_42> Ref : Lot de 3 paires de chaussettes (CH45-12)<x_86><y_49><sep/><x_5><y_47> n° Client : MZZQD86<x_33><y_51><sep/><x_19><y_54> Madame, Monsieur,<x_52><y_59><sep/><x_19><y_63> Ayant, en vain, essayer de contacter votre service<x_107><y_68><sep/><x_5><y_69> client je me permet de vous écrire afin d'effectuer<x_107><y_74><sep/><x_5><y_74> une modification de ma commande d'un lot de<x_107><y_81><sep/><x_6><y_81> 3 paires de chaussettes (CH45-12). En effet, je<x_105><y_87><sep/><x_6><y_87> souhaiterai apporter une modification de la taille<x_114><y_93><sep/><x_6><y_93> et des couleurs. Je voudrai recevoir un lot<x_105><y_99><sep/><x_6><y_99> de 3 paires de chaussettes de couleur noir (re)ble et<x_106><y_107><sep/><x_6><y_107> de taille 39140 au lieu du lot de 3 paires de<x_112><y_113><sep/><x_5><y_113> chaussettes de couleur blanc/same/orange de taille 36/37.<x_117><y_121><sep/><x_18><y_120> Je vous prie de bien vouloir prendre en compte<x_112><y_130><sep/><x_7><y_129> ces modifications et d'agréer Madame, Monsieur mes<x_111><y_135><sep/><x_7><y_133> sincères salutations.<x_47><y_137>",
+  "cleaned_text": "NOVAIS Stépanie\n16 RUE DE LA VALLEE\n57800 ROSBRUCK\ntel : 03770072994\nLes 3 Suifs\n40250 LAUREDE\nObjet : Modification de commande\nRef : Lot de 3 paires de chaussettes (CH45-12)\nn° Client : MZZQD86\nMadame, Monsieur,\nAyant, en vain, essayer de contacter votre service\nclient je me permet de vous écrire afin d'effectuer\nune modification de ma commande d'un lot de\n3 paires de chaussettes (CH45-12). En effet, je\nsouhaiterai apporter une modification de la taille\net des couleurs. Je voudrai recevoir un lot\nde 3 paires de chaussettes de couleur noir (re)ble et\nde taille 39140 au lieu du lot de 3 paires de\nchaussettes de couleur blanc/same/orange de taille 36/37.\nJe vous prie de bien vouloir prendre en compte\nces modifications et d'agréer Madame, Monsieur mes\nsincères salutations.",
+  "num_boxes": 22,
+  "boxes": [
+    [
+      60,
+      40,
+      340,
+      80
+    ],
+    [
+      50,
+      100,
+      390,
+      140
+    ],
+    [
+      50,
+      160,
+      340,
+      190
+    ],
+    [
+      60,
+      190,
+      290,
+      230
+    ],
+    [
+      630,
+      280,
+      820,
+      330
+    ],
+    [
+      630,
+      330,
+      890,
+      370
+    ],
+    [
+      60,
+      370,
+      600,
+      420
+    ],
+    [
+      50,
+      420,
+      860,
+      490
+    ],
+    [
+      50,
+      470,
+      330,
+      510
+    ],
+    [
+      190,
+      540,
+      520,
+      590
+    ],
+    [
+      190,
+      630,
+      1070,
+      680
+    ],
+    [
+      50,
+      690,
+      1070,
+      740
+    ],
+    [
+      50,
+      740,
+      1070,
+      810
+    ],
+    [
+      60,
+      810,
+      1050,
+      870
+    ],
+    [
+      60,
+      870,
+      1140,
+      930
+    ],
+    [
+      60,
+      930,
+      1050,
+      990
+    ],
+    [
+      60,
+      990,
+      1060,
+      1070
+    ],
+    [
+      60,
+      1070,
+      1120,
+      1130
+    ],
+    [
+      50,
+      1130,
+      1170,
+      1210
+    ],
+    [
+      180,
+      1200,
+      1120,
+      1300
+    ],
+    [
+      70,
+      1290,
+      1110,
+      1350
+    ],
+    [
+      70,
+      1330,
+      470,
+      1370
+    ]
+  ],
+  "coord_bin_size": 10,
+  "max_length": 1100,
+  "mean": [
+    202.70203512,
+    190.85819292,
+    136.0899374
+  ],
+  "std": [
+    71.9568345,
+    72.00679752,
+    57.33656372
+  ]
+}

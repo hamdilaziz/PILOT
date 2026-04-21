@@ -1,0 +1,21 @@
+{
+  "name": "pilot_iam",
+  "description": "PILOT specialized on IAM for <ocr_with_boxes>.",
+  "checkpoint": "checkpoints/pilot_iam.pt",
+  "tokenizer_path": "checkpoints/tokenizer",
+  "supported_tasks": ["ocr_with_boxes"],
+  "preprocessing": { 
+    "mean": [241.7599378,241.7599378,241.7599378] ,
+    "std": [49.46175223,49.46175223,49.46175223],
+    "coord_bin_size": 10
+  },
+  "encoder": {
+    "output_channels": 1024,
+    "dropout": 0.3
+  },
+  "decoder": {
+    "num_layers": 4,
+    "max_length": 512,
+    "extra_vocab_slots": 1
+  }
+}

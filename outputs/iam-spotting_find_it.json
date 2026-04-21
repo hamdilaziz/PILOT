@@ -1,0 +1,30 @@
+{
+  "model_name": "pilot_iam_spotting",
+  "image": "input_samples\\iam-spotting.png",
+  "task": "find_it",
+  "prompt": "<find_it> accidentally",
+  "prediction_time": 1.424081563949585,
+  "raw_prediction": "<x_5><y_53><x_24><y_59>",
+  "cleaned_text": "",
+  "num_boxes": 1,
+  "boxes": [
+    [
+      50,
+      530,
+      240,
+      590
+    ]
+  ],
+  "coord_bin_size": 10,
+  "max_length": 100,
+  "mean": [
+    241.7599378,
+    241.7599378,
+    241.7599378
+  ],
+  "std": [
+    49.46175223,
+    49.46175223,
+    49.46175223
+  ]
+}

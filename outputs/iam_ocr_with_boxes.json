@@ -1,0 +1,72 @@
+{
+  "model_name": "pilot_iam",
+  "image": "input_samples\\iam.png",
+  "task": "ocr_with_boxes",
+  "prompt": "<ocr_with_boxes>",
+  "prediction_time": 1.8676023483276367,
+  "raw_prediction": "<x_2><y_2> THE Fourth Gospel was almost certainly<x_78><y_7><sep/><x_2><y_11> written in Greek. A modern text of the<x_76><y_16><sep/><x_2><y_20> Gospel represents the work of generations of<x_90><y_26><sep/><x_2><y_29> scholars who have compared the many many manu-<x_92><y_34><sep/><x_2><y_38> scripts of John and worked out the version<x_89><y_43><sep/><x_3><y_47> which is most likely to have been the original<x_91><y_52><sep/><x_3><y_56> wording. It is not possible to establish any one<x_92><y_61><sep/><x_3><y_65> text with absolute precision.<x_58><y_70>",
+  "cleaned_text": "THE Fourth Gospel was almost certainly\nwritten in Greek. A modern text of the\nGospel represents the work of generations of\nscholars who have compared the many many manu-\nscripts of John and worked out the version\nwhich is most likely to have been the original\nwording. It is not possible to establish any one\ntext with absolute precision.",
+  "num_boxes": 8,
+  "boxes": [
+    [
+      20,
+      20,
+      780,
+      70
+    ],
+    [
+      20,
+      110,
+      760,
+      160
+    ],
+    [
+      20,
+      200,
+      900,
+      260
+    ],
+    [
+      20,
+      290,
+      920,
+      340
+    ],
+    [
+      20,
+      380,
+      890,
+      430
+    ],
+    [
+      30,
+      470,
+      910,
+      520
+    ],
+    [
+      30,
+      560,
+      920,
+      610
+    ],
+    [
+      30,
+      650,
+      580,
+      700
+    ]
+  ],
+  "coord_bin_size": 10,
+  "max_length": 512,
+  "mean": [
+    241.7599378,
+    241.7599378,
+    241.7599378
+  ],
+  "std": [
+    49.46175223,
+    49.46175223,
+    49.46175223
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "model_name": "pilot_generic",
+  "image": "input_samples\\focus_en_bench.png",
+  "task": "ocr_on_box",
+  "prompt": "<ocr_on_box> <x_5><y_83><x_73><y_85>",
+  "prediction_time": 4.9617085456848145,
+  "raw_prediction": "prevais in art. He courman in asserton, award a la on a propriete portion of resonable atomers. He person or public public public.",
+  "cleaned_text": "prevais in art. He courman in asserton, award a la on a propriete portion of resonable atomers. He person or public public public.",
+  "num_boxes": 0,
+  "boxes": [],
+  "coord_bin_size": 10,
+  "max_length": 2048,
+  "mean": [
+    123.675,
+    116.28,
+    103.53
+  ],
+  "std": [
+    58.395,
+    57.12,
+    57.375
+  ]
+}

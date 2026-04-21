@@ -1,0 +1,21 @@
+{
+  "name": "pilot_generic",
+  "description": "PILOT supports the four tasks and trained on a mixture of all datasets. This is the generic version of PILOT, which can be used for inference on any of the supported tasks.",
+  "checkpoint": "checkpoints/pilot_generic.pt",
+  "tokenizer_path": "checkpoints/tokenizer",
+  "supported_tasks": ["ocr_with_boxes", "ocr", "find_it", "ocr_on_box"],
+  "preprocessing": { 
+    "mean": [123.675, 116.28 , 103.53] ,
+    "std": [58.395, 57.12 , 57.375],
+    "coord_bin_size": 10
+  },
+  "encoder": {
+    "output_channels": 1024,
+    "dropout": 0.3
+  },
+  "decoder": {
+    "num_layers": 4,
+    "max_length": 2048,
+    "extra_vocab_slots": 1
+  }
+}
