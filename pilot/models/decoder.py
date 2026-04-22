@@ -15,12 +15,6 @@ __all__ = ["PILOTDecoder"]
 class PILOTDecoder(nn.Module):
     """
     PILOT autoregressive decoder based on mBART.
-
-    Notes:
-        - This is a single public decoder class with no wrapper.
-        - Donut weight loading has been removed.
-        - `extra_vocab_slots=1` is kept by default only for compatibility with
-          older checkpoints. Set it to 0 if your released weights do not need it.
     """
 
     def __init__(self, params: Dict[str, Any]) -> None:
@@ -205,9 +199,6 @@ class PILOTDecoder(nn.Module):
     def load_state_dict(self, state_dict: Dict[str, Tensor], strict: bool = True):
         """
         Load both new PILOT decoder checkpoints and older wrapper-based checkpoints.
-
-        Old checkpoints saved from `GlobalBARTDecoder` contain an extra leading
-        `decoder.` prefix. This method strips it automatically.
         """
         cleaned_state_dict = {}
         for key, value in state_dict.items():
