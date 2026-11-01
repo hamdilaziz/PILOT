@@ -1,0 +1,22 @@
+name: Tests
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  cpu:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install torch==2.6.0 --index-url https://download.pytorch.org/whl/cpu
+      - run: pip install -e ".[dev,notebooks]" transformers==4.57.6
+      - run: ruff check pilot tests train_pilot.py run_pilot.py examples
+      - run: pytest -q

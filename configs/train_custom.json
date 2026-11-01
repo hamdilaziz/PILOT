@@ -1,0 +1,17 @@
+{
+  "model_config": "pilot_generic.json",
+  "train_manifest": "../data/train.jsonl",
+  "validation_manifest": "../data/valid.jsonl",
+  "output_dir": "../runs/custom",
+  "extra_tokens": [],
+  "epochs": 10,
+  "learning_rate": 0.00001,
+  "batch_size": 1,
+  "accumulation_steps": 4,
+  "max_length": 512,
+  "precision": "auto",
+  "gradient_checkpointing": false,
+  "noise_rate": 0.0,
+  "selection_metric": "cer",
+  "seed": 42
+}

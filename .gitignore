@@ -1,4 +1,15 @@
 *.ipynb
+!examples/finetune_*.ipynb
 *.pt
-*.safetensors
 checkpoints/
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+*.patch
+build/
+dist/
+data/
+runs/
