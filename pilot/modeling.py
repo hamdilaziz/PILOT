@@ -2,12 +2,12 @@ from __future__ import annotations
 
 import math
 import time
+from collections import OrderedDict
 from typing import Any, Dict, Optional
 
 import torch
 import torch.nn as nn
 from torch import Tensor
-from torch.cuda.amp import autocast
 
 from .models.encoder import PILOTEncoder
 from .models.decoder import PILOTDecoder
@@ -23,8 +23,13 @@ class PILOTModel(nn.Module):
         self.use_2d_positional_encoding = bool(
             config.get("use_2d_positional_encoding", True)
         )
+        self.cpu_channels_last = False
+        self.positional_encoding_cache_size = 0
+        self._positional_encoding_cache = OrderedDict()
 
     def encode(self, images: Tensor) -> Tensor:
+        if self.cpu_channels_last and images.device.type == "cpu":
+            images = images.contiguous(memory_format=torch.channels_last)
         return self.encoder(images)
 
     @staticmethod
@@ -78,13 +83,17 @@ class PILOTModel(nn.Module):
             return features
 
         _, c, h, w = features.shape
-        pe = self._build_2d_positional_encoding(
-            height=h,
-            width=w,
-            dim=c,
-            device=features.device,
-            dtype=features.dtype,
-        )
+        use_cache = not self.training and not torch.is_grad_enabled() and self.positional_encoding_cache_size > 0
+        if not use_cache:
+            self._positional_encoding_cache.clear()
+        key = (h, w, c, features.device, features.dtype)
+        pe = self._positional_encoding_cache.pop(key, None) if use_cache else None
+        if pe is None:
+            pe = self._build_2d_positional_encoding(h, w, c, features.device, features.dtype)
+        if use_cache:
+            self._positional_encoding_cache[key] = pe
+            while len(self._positional_encoding_cache) > self.positional_encoding_cache_size:
+                self._positional_encoding_cache.popitem(last=False)
         return features + pe
 
     @staticmethod
@@ -102,7 +111,7 @@ class PILOTModel(nn.Module):
         )
 
     def _encode_for_decoder(self, images: Tensor) -> Tensor:
-        features = self.encoder(images)
+        features = self.encode(images)
         features = self._add_2d_positional_encoding(features)
         encoder_hidden_states = self._flatten_encoder_outputs(features)
 
@@ -241,9 +250,12 @@ class PILOTModel(nn.Module):
             token_prompts=token_prompts,
         )
 
-        start_time = time.time()
+        if device.type == "cuda":
+            torch.cuda.synchronize(device)
+        start_time = time.perf_counter()
 
-        with autocast(enabled=use_amp and device.type == "cuda"):
+        amp_dtype = torch.bfloat16 if device.type == "cuda" and torch.cuda.is_bf16_supported() else torch.float16
+        with torch.autocast(device.type, dtype=amp_dtype, enabled=use_amp and device.type == "cuda"):
             encoder_hidden_states = self._encode_for_decoder(x)
             bad_words_ids = [[unk_token_id]] if unk_token_id is not None else None
 
@@ -261,7 +273,9 @@ class PILOTModel(nn.Module):
                 repetition_penalty=repetition_penalty,
             )
 
-        process_time = time.time() - start_time
+        if device.type == "cuda":
+            torch.cuda.synchronize(device)
+        process_time = time.perf_counter() - start_time
 
         prefix_len = decoder_input_ids.size(1)
         generated_only = sequences[:, prefix_len:]

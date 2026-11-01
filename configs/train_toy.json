@@ -1,0 +1,10 @@
+{
+  "model_config": "pilot_generic.json",
+  "train_manifest": "../data/toy/train.jsonl",
+  "validation_manifest": "../data/toy/valid.jsonl",
+  "output_dir": "../runs/toy",
+  "epochs": 2,
+  "max_length": 64,
+  "accumulation_steps": 2,
+  "precision": "auto"
+}

@@ -95,6 +95,9 @@ def build_final_state_dict(training_checkpoint: Dict) -> Dict[str, torch.Tensor]
 
         return final_state_dict
 
+    if "model" in training_checkpoint:
+        training_checkpoint = {"model_state_dict": training_checkpoint["model"]}
+
     if "model_state_dict" in training_checkpoint:
         state_dict = strip_module_prefix(training_checkpoint["model_state_dict"])
         return {k: v.detach().cpu() for k, v in state_dict.items()}
@@ -112,44 +115,18 @@ def build_final_state_dict(training_checkpoint: Dict) -> Dict[str, torch.Tensor]
     )
 
 
-def make_tensors_serializable_for_safetensors(
-    state_dict: Dict[str, torch.Tensor],
-) -> Dict[str, torch.Tensor]:
-    """
-    Clone every tensor so shared storage does not trigger safetensors errors.
-    """
-    serializable = {}
-    for key, value in state_dict.items():
-        serializable[key] = value.detach().cpu().contiguous().clone()
-    return serializable
-
-
-def save_pt(state_dict: Dict[str, torch.Tensor], output_path: Path) -> None:
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    torch.save(state_dict, output_path)
-
-
-def save_safetensors(state_dict: Dict[str, torch.Tensor], output_path: Path) -> None:
-    from safetensors.torch import save_file
-
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    save_file(make_tensors_serializable_for_safetensors(state_dict), str(output_path))
-
-
 def convert_one_checkpoint(
     input_path: Path,
     output_path: Path,
     output_format: str,
 ) -> None:
-    checkpoint = torch.load(input_path, map_location="cpu")
+    checkpoint = torch.load(input_path, map_location="cpu", weights_only=True)
     final_state_dict = build_final_state_dict(checkpoint)
 
-    if output_format == "pt":
-        save_pt(final_state_dict, output_path)
-    elif output_format == "safetensors":
-        save_safetensors(final_state_dict, output_path)
-    else:
-        raise ValueError(f"Unsupported output format: {output_format}")
+    if output_format != "pt" or output_path.suffix != ".pt":
+        raise ValueError("Output checkpoints must use .pt.")
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    torch.save(final_state_dict, output_path)
 
     print(f"[OK] Converted: {input_path} -> {output_path}")
 
@@ -185,7 +162,7 @@ def parse_args() -> argparse.Namespace:
         "--format",
         type=str,
         default="pt",
-        choices=["pt", "safetensors"],
+        choices=["pt"],
         help="Output checkpoint format.",
     )
     parser.add_argument(
@@ -209,7 +186,7 @@ def main() -> None:
     if not files:
         raise FileNotFoundError("No checkpoint files were found.")
 
-    ext = ".safetensors" if args.format == "safetensors" else ".pt"
+    ext = ".pt"
 
     for input_path in files:
         output_name = f"{input_path.stem}{args.suffix}{ext}"
@@ -222,8 +199,4 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    convert_one_checkpoint(
-        input_path=Path("checkpoints/rimes.pt"),
-        output_path=Path("checkpoints/pilot_rimes.pt"),
-        output_format="pt",
-    )
+    main()

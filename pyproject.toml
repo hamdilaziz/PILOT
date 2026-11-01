@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pilot-ocr"
+version = "0.2.0"
+description = "Promptable Interleaved Layout-aware OCR Transformer"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "Apache-2.0"
+dependencies = [
+  "torch>=2.4,<3", "transformers>=4.57,<5",
+  "numpy>=1.24", "pillow>=10.1", "sentencepiece>=0.1.99", "tqdm>=4.66",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "ruff>=0.9"]
+notebooks = [
+  "jupyterlab>=4", "ipykernel>=6", "ipywidgets>=8", "nbformat>=5.10",
+  "pandas>=2", "matplotlib>=3.8", "requests>=2.31", "ijson>=3.2",
+]
+
+[tool.setuptools.packages.find]
+include = ["pilot*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F"]

@@ -138,6 +138,8 @@ class MixDropout(nn.Module):
         self.dropout2d = nn.Dropout2d(dropout2d_proba)
 
     def forward(self, x: Tensor) -> Tensor:
+        if not self.training:
+            return x
         if random.random() < 0.5:
             return self.dropout(x)
         return self.dropout2d(x)
@@ -165,13 +167,11 @@ class ConvBlock(nn.Module):
         self.conv3 = nn.Conv2d(
             out_, out_, kernel_size=(3, 3), padding=(1, 1), stride=stride
         )
-        self.norm_layer = nn.InstanceNorm2d(
-            out_, eps=1e-3, momentum=0.99, track_running_stats=False
-        )
+        self.norm_layer = nn.GroupNorm(out_, out_, eps=1e-3, affine=False)
         self.dropout = MixDropout(dropout_proba=dropout, dropout2d_proba=dropout / 2)
 
     def forward(self, x: Tensor) -> Tensor:
-        dropout_position = random.randint(1, 3)
+        dropout_position = random.randint(1, 3) if self.training else 0
 
         x = self.activation(self.conv1(x))
         if dropout_position == 1:
@@ -280,13 +280,11 @@ class DSCBlockOriginal(nn.Module):
         self.conv3 = DepthSepConv2D(
             out_, out_, kernel_size=(3, 3), padding=(1, 1), stride=stride
         )
-        self.norm_layer = nn.InstanceNorm2d(
-            out_, eps=1e-3, momentum=0.99, track_running_stats=False
-        )
+        self.norm_layer = nn.GroupNorm(out_, out_, eps=1e-3, affine=False)
         self.dropout = MixDropout(dropout_proba=dropout, dropout2d_proba=dropout / 2)
 
     def forward(self, x: Tensor) -> Tensor:
-        dropout_position = random.randint(1, 3)
+        dropout_position = random.randint(1, 3) if self.training else 0
 
         x = self.activation(self.conv1(x))
         if dropout_position == 1:
@@ -357,6 +355,7 @@ class PILOTEncoder(nn.Module):
 
         self.dropout = float(params["dropout"])
         self.use_checkpointing = bool(params.get("use_checkpointing", False))
+        self.check_finite = bool(params.get("check_finite", False))
 
         self.init_blocks = nn.Sequential(
             ConvBlock(3, 32, stride=(1, 1), dropout=self.dropout),
@@ -377,7 +376,8 @@ class PILOTEncoder(nn.Module):
         )
 
     def forward(self, x: Tensor) -> Tensor:
-        _assert_finite(x, "at the input of the encoder")
+        if self.check_finite:
+            _assert_finite(x, "at the input of the encoder")
 
         for i, block in enumerate(self.init_blocks):
             if i >= 5:
@@ -386,15 +386,18 @@ class PILOTEncoder(nn.Module):
                     x = block(x)
             else:
                 x = block(x)
-            _assert_finite(x, f"after init block {i}")
+            if self.check_finite:
+                _assert_finite(x, f"after init block {i}")
 
         with _autocast_disabled(x.device.type):
             x = x.float()
             for j, block in enumerate(self.blocks):
                 xt = block(x)
-                _assert_finite(xt, f"after encoder body block {j}")
+                if self.check_finite:
+                    _assert_finite(xt, f"after encoder body block {j}")
 
                 x = x + xt if x.shape == xt.shape else xt
-                _assert_finite(x, f"after residual connection of encoder body block {j}")
+                if self.check_finite:
+                    _assert_finite(x, f"after residual connection of encoder body block {j}")
 
         return x
